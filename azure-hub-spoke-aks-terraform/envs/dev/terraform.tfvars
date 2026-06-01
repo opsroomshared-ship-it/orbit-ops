@@ -1,5 +1,4 @@
 location = "eastus"
-resource_group_name = "dev-hub-spoke-rg"
 environment = "dev"
 
 tags = {

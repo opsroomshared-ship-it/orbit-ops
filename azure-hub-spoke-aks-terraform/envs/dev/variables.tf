@@ -3,11 +3,6 @@ variable "location" {
   description = "Azure location for this environment."
 }
 
-variable "resource_group_name" {
-  type        = string
-  description = "Resource group name for this environment."
-}
-
 variable "environment" {
   type        = string
   description = "Environment name."
