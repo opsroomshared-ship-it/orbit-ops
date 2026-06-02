@@ -1,8 +1,8 @@
-location = "eastus"
-resource_group_name = "dev-hub-spoke-rg"
-environment = "dev"
+location            = "eastus"
+resource_group_name = "prod-hub-spoke-rg"
+environment         = "prod"
 
 tags = {
-  Environment = "dev"
+  Environment = "prod"
   Project     = "azure-hub-spoke-aks-terraform"
 }

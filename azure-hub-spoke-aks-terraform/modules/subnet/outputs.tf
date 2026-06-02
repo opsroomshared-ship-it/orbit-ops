@@ -7,3 +7,4 @@ output "subnet_name" {
   description = "Subnet name."
   value       = azurerm_subnet.this.name
 }
+

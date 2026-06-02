@@ -1,42 +1,30 @@
 variable "name" {
-  type        = string
-  description = "Firewall name."
+  type = string
 }
 
 variable "location" {
-  type        = string
-  description = "Azure location for the firewall."
+  type = string
 }
 
 variable "resource_group_name" {
-  type        = string
-  description = "Resource group name for the firewall."
+  type = string
 }
 
-variable "sku_name" {
-  type        = string
-  description = "Firewall SKU name."
-  default     = "AZFW_VNet"
+variable "firewall_subnet_id" {
+  type = string
 }
 
 variable "sku_tier" {
-  type        = string
-  description = "Firewall SKU tier."
-  default     = "Premium"
-}
-
-variable "subnet_id" {
-  type        = string
-  description = "Subnet ID for the firewall."
-}
-
-variable "public_ip_address_id" {
-  type        = string
-  description = "Public IP address ID for the firewall."
+  type    = string
+  default = "Standard"
 }
 
 variable "tags" {
-  type        = map(string)
-  description = "Tags for the firewall."
-  default     = {}
+  type    = map(string)
+  default = {}
+}
+
+variable "source_addresses" {
+  description = "Source address ranges allowed through firewall."
+  type        = list(string)
 }

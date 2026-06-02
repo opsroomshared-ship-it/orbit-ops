@@ -35,3 +35,8 @@ variable "use_remote_gateways" {
   description = "Use remote gateways."
   default     = false
 }
+
+variable "allow_virtual_network_access" {
+  type    = bool
+  default = true
+}
