@@ -160,6 +160,19 @@ module "azure_firewall_diagnostics" {
   ]
 }
 
+module "acr" {
+  source = "../../modules/acr"
+
+  name                = replace("${local.base_name}acr", "-", "")
+  location            = var.location
+  resource_group_name = module.spoke_rg.resource_group_name
+  sku                 = "Premium"
+  admin_enabled       = false
+  tags                = var.tags
+}
+
+
+
 # Add other modules below as needed:
 
 
