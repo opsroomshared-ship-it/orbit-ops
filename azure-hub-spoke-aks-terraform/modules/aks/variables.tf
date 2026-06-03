@@ -1,55 +1,107 @@
 variable "name" {
-  type        = string
-  description = "AKS cluster name."
+  type = string
 }
 
 variable "location" {
-  type        = string
-  description = "Azure location for the AKS cluster."
+  type = string
 }
 
 variable "resource_group_name" {
-  type        = string
-  description = "Resource group name for the AKS cluster."
-}
-
-variable "node_pool_name" {
-  type        = string
-  description = "Default node pool name."
-  default     = "agentpool"
-}
-
-variable "node_count" {
-  type        = number
-  description = "Number of nodes in the default pool."
-  default     = 3
-}
-
-variable "vm_size" {
-  type        = string
-  description = "VM size for AKS nodes."
-  default     = "Standard_DS2_v2"
+  type = string
 }
 
 variable "dns_prefix" {
-  type        = string
-  description = "DNS prefix for the AKS cluster."
+  type = string
+}
+
+variable "kubernetes_version" {
+  type    = string
+  default = null
+}
+
+variable "private_cluster_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "oidc_issuer_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "workload_identity_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "default_node_pool_name" {
+  type    = string
+  default = "system"
+}
+
+variable "node_count" {
+  type    = number
+  default = 2
+}
+
+variable "vm_size" {
+  type    = string
+  default = "Standard_D2s_v5"
+}
+
+variable "vnet_subnet_id" {
+  type = string
+}
+
+variable "user_assigned_identity_id" {
+  type = string
+}
+
+variable "log_analytics_workspace_id" {
+  type = string
 }
 
 variable "network_plugin" {
-  type        = string
-  description = "Network plugin for AKS."
-  default     = "azure"
+  type    = string
+  default = "azure"
 }
 
-variable "identity_type" {
-  type        = string
-  description = "Identity type for AKS."
-  default     = "SystemAssigned"
+variable "network_plugin_mode" {
+  type    = string
+  default = "overlay"
+}
+
+variable "network_policy" {
+  type    = string
+  default = "azure"
+}
+
+variable "service_cidr" {
+  type    = string
+  default = "10.2.0.0/16"
+}
+
+variable "dns_service_ip" {
+  type    = string
+  default = "10.2.0.10"
+}
+
+variable "outbound_type" {
+  type    = string
+  default = "userDefinedRouting"
+}
+
+variable "enable_agic" {
+  type    = bool
+  default = false
+}
+
+variable "application_gateway_id" {
+  type    = string
+  default = null
 }
 
 variable "tags" {
-  type        = map(string)
-  description = "Tags to apply to AKS."
-  default     = {}
+  type    = map(string)
+  default = {}
 }

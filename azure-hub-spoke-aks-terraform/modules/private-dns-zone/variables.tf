@@ -1,15 +1,16 @@
 variable "name" {
-  type        = string
-  description = "Private DNS zone name."
+  type = string
 }
 
 variable "resource_group_name" {
-  type        = string
-  description = "Resource group for the private DNS zone."
+  type = string
+}
+
+variable "virtual_network_id" {
+  type = string
 }
 
 variable "tags" {
-  type        = map(string)
-  description = "Tags for the private DNS zone."
-  default     = {}
+  type    = map(string)
+  default = {}
 }

@@ -46,3 +46,75 @@ output "acr_login_server" {
   value = module.acr.acr_login_server
 }
 
+output "aks_identity_client_id" {
+  value = module.aks_identity.client_id
+}
+
+output "aks_identity_principal_id" {
+  value = module.aks_identity.principal_id
+}
+
+output "acr_pull_role_assignment_id" {
+  value = module.acr_pull_role.role_assignment_id
+}
+
+output "key_vault_name" {
+  value = module.key_vault.key_vault_name
+}
+
+output "key_vault_id" {
+  value = module.key_vault.key_vault_id
+}
+
+output "key_vault_uri" {
+  value = module.key_vault.key_vault_uri
+}
+
+
+output "key_vault_private_dns_zone_id" {
+  value = module.key_vault_private_dns_zone.private_dns_zone_id
+}
+
+output "acr_private_dns_zone_id" {
+  value = module.acr_private_dns_zone.private_dns_zone_id
+}
+
+output "key_vault_private_endpoint_ip" {
+  value = module.key_vault_private_endpoint.private_endpoint_private_ip
+}
+
+output "acr_private_endpoint_ip" {
+  value = module.acr_private_endpoint.private_endpoint_private_ip
+}
+
+output "aks_name" {
+  value = module.aks.aks_name
+}
+
+output "aks_id" {
+  value = module.aks.aks_id
+}
+
+output "aks_oidc_issuer_url" {
+  value = module.aks.oidc_issuer_url
+}
+
+output "aks_kubelet_identity_object_id" {
+  value = module.aks.kubelet_identity_object_id
+}
+
+output "agic_identity_object_id" {
+  value = module.aks.agic_identity_object_id
+}
+
+output "app_gateway_id" {
+  value = module.app_gateway.application_gateway_id
+}
+
+output "app_gateway_name" {
+  value = module.app_gateway.application_gateway_name
+}
+
+output "app_gateway_public_ip" {
+  value = module.app_gateway.application_gateway_public_ip
+}

@@ -11,6 +11,8 @@ locals {
   spoke_subnet_name = "${local.base_name}-spoke-subnet"
 
   spoke_route_table_name = "${local.base_name}-spoke-rt"
+  app_gateway_subnet_name = "AppGatewaySubnet"
+  app_gateway_name        = "${local.base_name}-appgw"
 }
 
 module "hub_rg" {
@@ -171,17 +173,148 @@ module "acr" {
   tags                = var.tags
 }
 
+module "aks_identity" {
+  source = "../../modules/user-assigned-identity"
+
+  name                = "${local.base_name}-aks-mi"
+  location            = var.location
+  resource_group_name = module.spoke_rg.resource_group_name
+  tags                = var.tags
+}
+
+module "acr_pull_role" {
+  source = "../../modules/role-assignment"
+
+  scope                = module.acr.acr_id
+  role_definition_name = "AcrPull"
+  principal_id         = module.aks_identity.principal_id
+}
+
+data "azurerm_client_config" "current" {}
+
+module "key_vault" {
+  source = "../../modules/key-vault"
+
+  name                = replace("${local.base_name}-kv", "-", "")
+  location            = var.location
+  resource_group_name = module.spoke_rg.resource_group_name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+
+  public_network_access_enabled = true
+
+  tags = var.tags
+}
+
+module "kv_secrets_user_role" {
+  source = "../../modules/role-assignment"
+
+  scope                = module.key_vault.key_vault_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = module.aks_identity.principal_id
+}
+
+module "key_vault_private_dns_zone" {
+  source = "../../modules/private-dns-zone"
+
+  name                = var.key_vault_private_dns_zone_name
+  resource_group_name = module.spoke_rg.resource_group_name
+  virtual_network_id  = module.spoke_vnet.vnet_id
+  tags                = var.tags
+}
+
+module "acr_private_dns_zone" {
+  source = "../../modules/private-dns-zone"
+
+  name                = var.acr_private_dns_zone_name
+  resource_group_name = module.spoke_rg.resource_group_name
+  virtual_network_id  = module.spoke_vnet.vnet_id
+  tags                = var.tags
+}
+
+module "key_vault_private_endpoint" {
+  source = "../../modules/private-endpoint"
+
+  name                           = "${local.base_name}-kv-pe"
+  location                       = var.location
+  resource_group_name            = module.spoke_rg.resource_group_name
+  subnet_id                      = module.spoke_subnet.subnet_id
+  private_connection_resource_id = module.key_vault.key_vault_id
+  subresource_names              = ["vault"]
+  private_dns_zone_ids           = [module.key_vault_private_dns_zone.private_dns_zone_id]
+  tags                           = var.tags
+}
+
+module "acr_private_endpoint" {
+  source = "../../modules/private-endpoint"
+
+  name                           = "${local.base_name}-acr-pe"
+  location                       = var.location
+  resource_group_name            = module.spoke_rg.resource_group_name
+  subnet_id                      = module.spoke_subnet.subnet_id
+  private_connection_resource_id = module.acr.acr_id
+  subresource_names              = ["registry"]
+  private_dns_zone_ids           = [module.acr_private_dns_zone.private_dns_zone_id]
+  tags                           = var.tags
+}
+
+module "aks" {
+  source = "../../modules/aks"
+
+  name                = "${local.base_name}-aks"
+  location            = var.location
+  resource_group_name = module.spoke_rg.resource_group_name
+  dns_prefix          = "${local.base_name}-aks"
+
+  private_cluster_enabled = var.private_cluster_enabled
+
+  node_count = var.aks_node_count
+  vm_size    = var.aks_vm_size
+
+  vnet_subnet_id             = module.spoke_subnet.subnet_id
+  user_assigned_identity_id  = module.aks_identity.identity_id
+  log_analytics_workspace_id = module.log_analytics.workspace_id
+
+  service_cidr   = var.aks_service_cidr
+  dns_service_ip = var.aks_dns_service_ip
+
+  enable_agic            = var.enable_agic
+  application_gateway_id = module.app_gateway.application_gateway_id
+
+  tags = var.tags
+}
+
+module "aks_kubelet_acr_pull_role" {
+  source = "../../modules/role-assignment"
+
+  scope                = module.acr.acr_id
+  role_definition_name = "AcrPull"
+  principal_id         = module.aks.kubelet_identity_object_id
+}
+
+module "agic_appgw_contributor_role" {
+  source = "../../modules/role-assignment"
+
+  scope                = module.app_gateway.application_gateway_id
+  role_definition_name = "Contributor"
+  principal_id         = module.aks.agic_identity_object_id
+}
+
+module "app_gateway" {
+  source = "../../modules/app-gateway"
+
+  name                = local.app_gateway_name
+  location            = var.location
+  resource_group_name = module.hub_rg.resource_group_name
+  subnet_id           = module.app_gateway_subnet.subnet_id
+
+  sku_name = var.app_gateway_sku_name
+  sku_tier = var.app_gateway_sku_tier
+  capacity = var.app_gateway_capacity
+
+  tags = var.tags
+}
 
 
-# Add other modules below as needed:
 
-
-# - acr
-# - key-vault
-# - private-dns-zone
-# - private-endpoint
-# - user-assigned-identity
-# - role-assignment
-# - aks
 # - appgateway
 # - agic-add-on

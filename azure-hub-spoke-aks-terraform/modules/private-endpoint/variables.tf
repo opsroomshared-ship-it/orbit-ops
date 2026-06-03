@@ -1,47 +1,32 @@
 variable "name" {
-  type        = string
-  description = "Private endpoint name."
+  type = string
 }
 
 variable "location" {
-  type        = string
-  description = "Azure location for the private endpoint."
+  type = string
 }
 
 variable "resource_group_name" {
-  type        = string
-  description = "Resource group for the private endpoint."
+  type = string
 }
 
 variable "subnet_id" {
-  type        = string
-  description = "Subnet ID for the private endpoint."
-}
-
-variable "connection_name" {
-  type        = string
-  description = "Service connection name."
+  type = string
 }
 
 variable "private_connection_resource_id" {
-  type        = string
-  description = "Resource ID of the service to connect privately."
+  type = string
 }
 
 variable "subresource_names" {
-  type        = list(string)
-  description = "Subresource names for the connection."
-  default     = []
+  type = list(string)
 }
 
-variable "is_manual_connection" {
-  type        = bool
-  description = "Whether connection is manual."
-  default     = false
+variable "private_dns_zone_ids" {
+  type = list(string)
 }
 
 variable "tags" {
-  type        = map(string)
-  description = "Tags for the private endpoint."
-  default     = {}
+  type    = map(string)
+  default = {}
 }
