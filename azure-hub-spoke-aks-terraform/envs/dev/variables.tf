@@ -45,42 +45,6 @@ variable "azure_firewall_sku_tier" {
   default     = "Standard"
 }
 
-variable "name" {
-  type = string
-}
-
-variable "location" {
-  type = string
-}
-
-variable "resource_group_name" {
-  type = string
-}
-
-variable "tenant_id" {
-  type = string
-}
-
-variable "sku_name" {
-  type    = string
-  default = "standard"
-}
-
-variable "purge_protection_enabled" {
-  type    = bool
-  default = false
-}
-
-variable "soft_delete_retention_days" {
-  type    = number
-  default = 7
-}
-
-variable "public_network_access_enabled" {
-  type    = bool
-  default = true
-}
-
 variable "key_vault_private_dns_zone_name" {
   type    = string
   default = "privatelink.vaultcore.azure.net"

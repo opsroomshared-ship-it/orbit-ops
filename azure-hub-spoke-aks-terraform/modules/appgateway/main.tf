@@ -1,13 +1,4 @@
-module "app_gateway_subnet" {
-  source = "../../modules/subnet"
-
-  name                 = local.app_gateway_subnet_name
-  resource_group_name  = module.hub_rg.resource_group_name
-  virtual_network_name = module.hub_vnet.vnet_name
-  address_prefixes     = var.app_gateway_subnet_address_prefixes
-}
-
-resource "azurerm_public_ip" "this" {
+resource "azurerm_public_ip" "appgw_ip" {
   name                = "${var.name}-pip"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -39,7 +30,7 @@ resource "azurerm_application_gateway" "this" {
 
   frontend_ip_configuration {
     name                 = "frontend-public-ip"
-    public_ip_address_id = azurerm_public_ip.this.id
+    public_ip_address_id = azurerm_public_ip.appgw_ip.id
   }
 
   backend_address_pool {

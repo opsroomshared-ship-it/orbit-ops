@@ -98,6 +98,14 @@ module "azure_firewall_subnet" {
   address_prefixes     = var.azure_firewall_subnet_address_prefixes
 }
 
+module "app_gateway_subnet" {
+  source               = "../../modules/subnet"
+  name                 = local.app_gateway_subnet_name
+  resource_group_name  = module.hub_rg.resource_group_name
+  virtual_network_name = module.hub_vnet.vnet_name
+  address_prefixes     = var.app_gateway_subnet_address_prefixes
+}
+
 module "azure_firewall" {
   source = "../../modules/firewall"
 
@@ -271,7 +279,7 @@ module "aks" {
   vm_size    = var.aks_vm_size
 
   vnet_subnet_id             = module.spoke_subnet.subnet_id
-  user_assigned_identity_id  = module.aks_identity.identity_id
+  user_assigned_identity_id  = module.aks_identity.id
   log_analytics_workspace_id = module.log_analytics.workspace_id
 
   service_cidr   = var.aks_service_cidr
@@ -300,7 +308,7 @@ module "agic_appgw_contributor_role" {
 }
 
 module "app_gateway" {
-  source = "../../modules/app-gateway"
+  source = "../../modules/appgateway"
 
   name                = local.app_gateway_name
   location            = var.location
